@@ -1,4 +1,4 @@
-# SEDailyRT
+# SEDailyRT [![Build Status](https://travis-ci.org/SoftwareEngineeringDaily/se-daily-rt.svg?branch=master)](https://travis-ci.org/SoftwareEngineeringDaily/se-daily-rt)
 
 To start your Phoenix server:
 
