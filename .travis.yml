@@ -4,6 +4,6 @@ elixir:
 env:
   - MIX_ENV=test
 script:
-  - mix depts.get
+  - mix deps.get
   - mix test
 after_success:
