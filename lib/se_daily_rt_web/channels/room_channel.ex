@@ -15,9 +15,22 @@ defmodule SEDailyRTWeb.RoomChannel do
     {:reply, {:ok, payload}, socket}
   end
 
+  def handle_in("user_join", %{"username" => username}, socket) do
+    # Do something here with the username
+    broadcast socket, "user_joined", %{"username" => username}
+    {:noreply, socket}
+  end
+
+  def handle_in("create_chat_message", %{"message" => message, "username" => username}, socket) do
+    # Do something here with the username and message
+    broadcast socket, "new_message", %{"username" => username, "message" => message}
+    {:noreply, socket}
+  end
+
   # It is also common to receive messages from the client and
   # broadcast to everyone in the current topic (room:lobby).
   def handle_in("shout", payload, socket) do
+    # sends to client using broadcast
     broadcast socket, "shout", payload
     {:noreply, socket}
   end
