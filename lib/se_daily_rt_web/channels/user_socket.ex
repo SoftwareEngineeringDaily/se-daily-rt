@@ -2,8 +2,8 @@ defmodule SEDailyRTWeb.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  # channel "room:*", SEDailyRTWeb.RoomChannel
-  channel "room:lobby", SEDailyRTWeb.RoomChannel
+  channel "room:*", SEDailyRTWeb.RoomChannel
+  channel "podcast:*", SEDailyRTWeb.RoomChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket

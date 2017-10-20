@@ -21,9 +21,9 @@ defmodule SEDailyRTWeb.RoomChannel do
     {:noreply, socket}
   end
 
-  def handle_in("create_chat_message", %{"message" => message, "username" => username}, socket) do
+  def handle_in("create_chat_message", %{"text" => message, "username" => username}, socket) do
     # Do something here with the username and message
-    broadcast socket, "new_message", %{"username" => username, "message" => message}
+    broadcast socket, "new_message", %{"username" => username, "text" => message}
     {:noreply, socket}
   end
 
