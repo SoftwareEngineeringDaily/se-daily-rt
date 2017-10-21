@@ -1,11 +1,16 @@
 defmodule SEDailyRTWeb.RoomChannel do
   use SEDailyRTWeb, :channel
+  alias SEDailyRTWeb.Presence
+  alias SEDailyRT.Accounts
+  
 
   def join("room:lobby", payload, socket) do
-    if authorized?(payload) do
-      {:ok, socket}
-    else
-      {:error, %{reason: "unauthorized"}}
+    case create_or_load_user(payload) do
+      %{username: username} -> 
+        send(self(), :after_join)
+        {:ok, assign(socket, :username, username)}
+      _ -> 
+        {:error, %{reason: "unauthorized"}}
     end
   end
 
@@ -15,28 +20,30 @@ defmodule SEDailyRTWeb.RoomChannel do
     {:reply, {:ok, payload}, socket}
   end
 
-  def handle_in("user_join", %{"username" => username}, socket) do
-    # Do something here with the username
-    broadcast socket, "user_joined", %{"username" => username}
+  # Hanle user joins and leaves using Presence
+  def handle_info(:after_join, socket) do
+    push socket, "presence_state", Presence.list(socket)
+    {:ok, _} = Presence.track(socket, socket.assigns.username, %{
+      online_at: inspect(System.system_time(:seconds))
+    })
     {:noreply, socket}
   end
 
-  def handle_in("create_chat_message", %{"text" => message, "username" => username}, socket) do
-    # Do something here with the username and message
+  def handle_in("create_chat_message", %{"text" => message}, socket) do
+    %{assigns: %{username: username}} = socket
+
+    # Save to database
+    
+    # Broadcast event to clients
     broadcast socket, "new_message", %{"username" => username, "text" => message}
     {:noreply, socket}
   end
-
-  # It is also common to receive messages from the client and
-  # broadcast to everyone in the current topic (room:lobby).
-  def handle_in("shout", payload, socket) do
-    # sends to client using broadcast
-    broadcast socket, "shout", payload
-    {:noreply, socket}
-  end
-
-  # Add authorization logic here as required.
-  defp authorized?(_payload) do
-    true
+  
+  # Create or load the user by the username
+  defp create_or_load_user(%{"username" => username}) do
+    case Accounts.get_user_by_username(username) do
+      nil -> Accounts.create_user(%{"username" => username})
+      user -> user
+    end
   end
 end

@@ -38,6 +38,20 @@ defmodule SEDailyRT.Accounts do
   def get_user!(id), do: Repo.get!(User, id)
 
   @doc """
+  Gets a single user by the username.
+
+  ## Examples
+
+      iex> get_user_by_username('someone')
+      %User{}
+
+      iex> get_user_by_username('no_one')
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_user_by_username(username), do: Repo.get_by(User, username: username)
+  
+  @doc """
   Creates a user.
 
   ## Examples

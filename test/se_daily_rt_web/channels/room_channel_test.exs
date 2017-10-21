@@ -5,8 +5,8 @@ defmodule SEDailyRTWeb.RoomChannelTest do
 
   setup do
     {:ok, _, socket} =
-      socket("user_id", %{some: :assign})
-      |> subscribe_and_join(RoomChannel, "room:lobby")
+      socket()
+      |> subscribe_and_join(RoomChannel, "room:lobby", %{"username" => "tester"})
 
     {:ok, socket: socket}
   end
@@ -16,9 +16,9 @@ defmodule SEDailyRTWeb.RoomChannelTest do
     assert_reply ref, :ok, %{"hello" => "there"}
   end
 
-  test "shout broadcasts to room:lobby", %{socket: socket} do
-    push socket, "shout", %{"hello" => "all"}
-    assert_broadcast "shout", %{"hello" => "all"}
+  test "create_chat_message replies with status ok", %{socket: socket} do
+    broadcast_from! socket, "create_chat_message", %{"username" => "tester", "text" => "hey there"}
+    assert_push "new_message", %{"username" => "tester", "text" => "hey there"}
   end
 
   test "broadcasts are pushed to the client", %{socket: socket} do

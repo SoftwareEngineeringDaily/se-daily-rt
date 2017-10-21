@@ -5,15 +5,15 @@ defmodule SEDailyRT.Accounts.User do
 
 
   schema "users" do
-    field :name, :string
-
+    field :username, :string
     timestamps()
   end
 
   @doc false
   def changeset(%User{} = user, attrs) do
     user
-    |> cast(attrs, [:name])
-    |> validate_required([:name])
+    |> cast(attrs, [:username])
+    |> validate_required([:username])
   end
+
 end
