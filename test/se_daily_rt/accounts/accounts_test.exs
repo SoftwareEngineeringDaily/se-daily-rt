@@ -6,9 +6,9 @@ defmodule SEDailyRT.AccountsTest do
   describe "users" do
     alias SEDailyRT.Accounts.User
 
-    @valid_attrs %{name: "some name"}
-    @update_attrs %{name: "some updated name"}
-    @invalid_attrs %{name: nil}
+    @valid_attrs %{username: "some name"}
+    @update_attrs %{username: "some updated name"}
+    @invalid_attrs %{username: nil}
 
     def user_fixture(attrs \\ %{}) do
       {:ok, user} =
@@ -31,7 +31,7 @@ defmodule SEDailyRT.AccountsTest do
 
     test "create_user/1 with valid data creates a user" do
       assert {:ok, %User{} = user} = Accounts.create_user(@valid_attrs)
-      assert user.name == "some name"
+      assert user.username == "some name"
     end
 
     test "create_user/1 with invalid data returns error changeset" do
@@ -42,7 +42,7 @@ defmodule SEDailyRT.AccountsTest do
       user = user_fixture()
       assert {:ok, user} = Accounts.update_user(user, @update_attrs)
       assert %User{} = user
-      assert user.name == "some updated name"
+      assert user.username == "some updated name"
     end
 
     test "update_user/2 with invalid data returns error changeset" do

@@ -7,15 +7,16 @@ defmodule SEDailyRT.Chats.Messages do
   schema "messages" do
     field :body, :string
     field :user_id, :id
-    field :channel_id, :id
-
+    field :channel, :string
+    has_one :user, SEDailyRT.Accounts.User
+    
     timestamps()
   end
 
   @doc false
   def changeset(%Messages{} = messages, attrs) do
     messages
-    |> cast(attrs, [:body])
-    |> validate_required([:body])
+    |> cast(attrs, [:body, :channel])
+    |> validate_required([:body, :channel])
   end
 end

@@ -7,7 +7,7 @@ defmodule SEDailyRTWeb.RoomChannelTest do
     {:ok, _, socket} =
       socket()
       |> subscribe_and_join(RoomChannel, "room:lobby", %{"username" => "tester"})
-
+      
     {:ok, socket: socket}
   end
 

@@ -6,6 +6,8 @@ defmodule SEDailyRT.Accounts.User do
 
   schema "users" do
     field :username, :string
+    has_many :messages, SEDailyRT.Chats.Messages
+    
     timestamps()
   end
 

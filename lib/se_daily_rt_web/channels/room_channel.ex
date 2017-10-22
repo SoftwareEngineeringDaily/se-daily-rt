@@ -2,13 +2,14 @@ defmodule SEDailyRTWeb.RoomChannel do
   use SEDailyRTWeb, :channel
   alias SEDailyRTWeb.Presence
   alias SEDailyRT.Accounts
+  alias SEDailyRT.Chats
   
 
   def join("room:lobby", payload, socket) do
     case create_or_load_user(payload) do
-      %{username: username} -> 
+      %{username: username, id: id} -> 
         send(self(), :after_join)
-        {:ok, assign(socket, :username, username)}
+        {:ok, assign(socket, :user, %{username: username, id: id})}
       _ -> 
         {:error, %{reason: "unauthorized"}}
     end
@@ -23,19 +24,21 @@ defmodule SEDailyRTWeb.RoomChannel do
   # Hanle user joins and leaves using Presence
   def handle_info(:after_join, socket) do
     push socket, "presence_state", Presence.list(socket)
-    {:ok, _} = Presence.track(socket, socket.assigns.username, %{
+    {:ok, _} = Presence.track(socket, socket.assigns.user.username, %{
       online_at: inspect(System.system_time(:seconds))
     })
     {:noreply, socket}
   end
 
   def handle_in("create_chat_message", %{"text" => message}, socket) do
-    %{assigns: %{username: username}} = socket
-
+    %{assigns: %{user: %{username: username}}, topic: topic} = socket
+    
     # Save to database
+    {:ok, %{id: id, body: body}} = create_or_load_user(%{"username" => username})
+    |> Chats.create_user_message(%{body: message, channel: topic})
     
     # Broadcast event to clients
-    broadcast socket, "new_message", %{"username" => username, "text" => message}
+    broadcast socket, "new_message", %{"username" => username, "text" => body, "id" => id}
     {:noreply, socket}
   end
   

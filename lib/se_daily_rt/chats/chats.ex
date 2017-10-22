@@ -5,6 +5,7 @@ defmodule SEDailyRT.Chats do
 
   import Ecto.Query, warn: false
   alias SEDailyRT.Repo
+  alias SEDailyRT.Accounts.User  
 
   alias SEDailyRT.Chats.Channels
 
@@ -134,19 +135,20 @@ defmodule SEDailyRT.Chats do
   def get_messages!(id), do: Repo.get!(Messages, id)
 
   @doc """
-  Creates a messages.
+  Creates a user message.
 
   ## Examples
 
-      iex> create_messages(%{field: value})
+      iex> create_user_message(%User{},%{field: value})
       {:ok, %Messages{}}
 
-      iex> create_messages(%{field: bad_value})
+      iex> create_user_message(%User{},%{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_messages(attrs \\ %{}) do
-    %Messages{}
+  def create_user_message(%User{} = user, attrs \\ %{}) do
+    user
+    |> Ecto.build_assoc(:messages)
     |> Messages.changeset(attrs)
     |> Repo.insert()
   end
