@@ -119,6 +119,25 @@ defmodule SEDailyRT.Chats do
   end
 
   @doc """
+  Returns the list of messages for a given channel.
+
+  ## Examples
+
+      iex> list_channel_messages("best_channel")
+      [%Messages{}, ...]
+
+  """
+  def list_channel_messages(channel) do 
+    Repo.all(
+        from m in Messages,
+        limit: 100, 
+        order_by: [asc: m.id],
+        where: m.channel == ^channel,
+        preload: [:user]
+    )
+  end
+
+  @doc """
   Gets a single messages.
 
   Raises `Ecto.NoResultsError` if the Messages does not exist.

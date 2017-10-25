@@ -6,9 +6,8 @@ defmodule SEDailyRT.Chats.Messages do
 
   schema "messages" do
     field :body, :string
-    field :user_id, :id
     field :channel, :string
-    has_one :user, SEDailyRT.Accounts.User
+    belongs_to :user, SEDailyRT.Accounts.User
     
     timestamps()
   end

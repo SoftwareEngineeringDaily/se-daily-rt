@@ -1,15 +1,23 @@
 defmodule SEDailyRTWeb.RoomChannel do
   use SEDailyRTWeb, :channel
   alias SEDailyRTWeb.Presence
+  alias SEDailyRTWeb.MessageView
   alias SEDailyRT.Accounts
   alias SEDailyRT.Chats
+  alias SEDailyRT.Repo
   
 
   def join("room:lobby", payload, socket) do
     case create_or_load_user(payload) do
       %{username: username, id: id} -> 
-        send(self(), :after_join)
-        {:ok, assign(socket, :user, %{username: username, id: id})}
+        # load previous chat messages for topic if any
+        %{topic: topic} = socket
+        messages = SEDailyRT.Chats.list_channel_messages(topic)
+        resp = %{messages: Phoenix.View.render_many(messages, MessageView, "message.json")}
+
+        # trigger the after_join for presense
+        send(self(), :after_join)        
+        {:ok, resp, assign(socket, :user, %{username: username, id: id})}
       _ -> 
         {:error, %{reason: "unauthorized"}}
     end
@@ -34,12 +42,19 @@ defmodule SEDailyRTWeb.RoomChannel do
     %{assigns: %{user: %{username: username}}, topic: topic} = socket
     
     # Save to database
-    {:ok, %{id: id, body: body}} = create_or_load_user(%{"username" => username})
-    |> Chats.create_user_message(%{body: message, channel: topic})
-    
-    # Broadcast event to clients
-    broadcast socket, "new_message", %{"username" => username, "text" => body, "id" => id}
-    {:noreply, socket}
+    user = create_or_load_user(%{"username" => username})
+
+    case Chats.create_user_message(user, %{body: message, channel: topic}) do 
+      {:ok, msg} -> 
+        message = msg
+        |> Repo.preload(:user)
+        |> Phoenix.View.render_one(MessageView, "message.json")
+        
+        broadcast socket, "new_message", message
+        {:reply, :ok, socket}
+      {:error, changeset} -> 
+        {:reply, changeset, socket}
+    end    
   end
   
   # Create or load the user by the username
