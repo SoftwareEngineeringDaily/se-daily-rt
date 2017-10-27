@@ -65,22 +65,37 @@ defmodule SEDailyRT.ChatsTest do
 
   describe "messages" do
     alias SEDailyRT.Chats.Messages
+    alias SEDailyRT.Accounts.User
+    alias SEDailyRT.Accounts
+    
 
-    @valid_attrs %{body: "some body"}
+    @valid_attrs %{body: "some body", channel: "cool_channel"}
+    @user_valid_attrs %{username: "johny_ive"}
     @update_attrs %{body: "some updated body"}
     @invalid_attrs %{body: nil}
 
+    def user_fixture(attrs \\ %{}) do
+      {:ok, user} =
+      attrs
+      |> Enum.into(@user_valid_attrs)
+      |> Accounts.create_user()
+
+      user
+    end
+
     def messages_fixture(attrs \\ %{}) do
       {:ok, messages} =
+        user = user_fixture()
+        IO.inspect(user)
         attrs
         |> Enum.into(@valid_attrs)
-        |> Chats.create_messages()
-
+        |> Chats.create_user_message()
       messages
     end
 
     test "list_messages/0 returns all messages" do
       messages = messages_fixture()
+      IO.inspect(messages)
       assert Chats.list_messages() == [messages]
     end
 
@@ -89,13 +104,13 @@ defmodule SEDailyRT.ChatsTest do
       assert Chats.get_messages!(messages.id) == messages
     end
 
-    test "create_messages/1 with valid data creates a messages" do
-      assert {:ok, %Messages{} = messages} = Chats.create_messages(@valid_attrs)
+    test "create_user_message/1 with valid data creates a messages" do
+      assert {:ok, %Messages{} = messages} = Chats.create_user_message(@valid_attrs)
       assert messages.body == "some body"
     end
 
-    test "create_messages/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Chats.create_messages(@invalid_attrs)
+    test "create_user_message/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Chats.create_user_message(@invalid_attrs)
     end
 
     test "update_messages/2 with valid data updates the messages" do
