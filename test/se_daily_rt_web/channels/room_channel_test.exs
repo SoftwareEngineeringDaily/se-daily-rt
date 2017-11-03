@@ -18,7 +18,7 @@ defmodule SEDailyRTWeb.RoomChannelTest do
 
   test "create_chat_message replies with status ok", %{socket: socket} do
     broadcast_from! socket, "create_chat_message", %{"username" => "tester", "text" => "hey there"}
-    assert_push "new_message", %{"username" => "tester", "text" => "hey there"}
+    assert_push "create_chat_message", %{"username" => "tester", "text" => "hey there"}
   end
 
   test "broadcasts are pushed to the client", %{socket: socket} do

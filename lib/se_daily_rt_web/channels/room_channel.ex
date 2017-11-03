@@ -60,7 +60,9 @@ defmodule SEDailyRTWeb.RoomChannel do
   # Create or load the user by the username
   defp create_or_load_user(%{"username" => username}) do
     case Accounts.get_user_by_username(username) do
-      nil -> Accounts.create_user(%{"username" => username})
+      nil -> 
+        {:ok, user} = Accounts.create_user(%{"username" => username})
+        user
       user -> user
     end
   end
