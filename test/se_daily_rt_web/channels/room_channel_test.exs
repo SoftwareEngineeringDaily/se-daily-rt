@@ -10,12 +10,7 @@ defmodule SEDailyRTWeb.RoomChannelTest do
       
     {:ok, socket: socket}
   end
-
-  test "ping replies with status ok", %{socket: socket} do
-    ref = push socket, "ping", %{"hello" => "there"}
-    assert_reply ref, :ok, %{"hello" => "there"}
-  end
-
+  
   test "create_chat_message replies with status ok", %{socket: socket} do
     broadcast_from! socket, "create_chat_message", %{"username" => "tester", "text" => "hey there"}
     assert_push "create_chat_message", %{"username" => "tester", "text" => "hey there"}

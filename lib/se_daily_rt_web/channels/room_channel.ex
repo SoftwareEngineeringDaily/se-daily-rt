@@ -23,12 +23,6 @@ defmodule SEDailyRTWeb.RoomChannel do
     end
   end
 
-  # Channels can be used in a request/response fashion
-  # by sending replies to requests from the client
-  def handle_in("ping", payload, socket) do
-    {:reply, {:ok, payload}, socket}
-  end
-
   # Hanle user joins and leaves using Presence
   def handle_info(:after_join, socket) do
     push socket, "presence_state", Presence.list(socket)
@@ -40,7 +34,7 @@ defmodule SEDailyRTWeb.RoomChannel do
 
   def handle_in("create_chat_message", %{"text" => message}, socket) do
     %{assigns: %{user: %{username: username}}, topic: topic} = socket
-    
+    message = HtmlSanitizeEx.strip_tags(message)
     # Save to database
     user = create_or_load_user(%{"username" => username})
 
