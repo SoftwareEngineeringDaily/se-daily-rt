@@ -5,24 +5,19 @@ defmodule SEDailyRTWeb.PodcastChannelTest do
 
   setup do
     {:ok, _, socket} =
-      socket("user_id", %{some: :assign})
-      |> subscribe_and_join(PodcastChannel, "podcast:*")
-
+      socket()
+      |> subscribe_and_join(PodcastChannel, "podcast:best-podcast-ever", %{"username" => "tester"})
+    
     {:ok, socket: socket}
   end
 
-  test "ping replies with status ok", %{socket: socket} do
-    ref = push socket, "ping", %{"hello" => "there"}
-    assert_reply ref, :ok, %{"hello" => "there"}
+  test "socket contains user information", %{socket: socket} do
+    %{assigns: %{podcast_id: podcast_id}} = socket
+    assert podcast_id == "best-podcast-ever"
   end
 
-  test "shout broadcasts to podcast:lobby", %{socket: socket} do
-    push socket, "shout", %{"hello" => "all"}
-    assert_broadcast "shout", %{"hello" => "all"}
-  end
-
-  test "broadcasts are pushed to the client", %{socket: socket} do
-    broadcast_from! socket, "broadcast", %{"some" => "data"}
-    assert_push "broadcast", %{"some" => "data"}
+  test "create_chat_message replies with status ok", %{socket: socket} do
+    broadcast_from! socket, "create_chat_message", %{"username" => "tester", "text" => "hey there"}
+    assert_push "create_chat_message", %{"username" => "tester", "text" => "hey there"}
   end
 end

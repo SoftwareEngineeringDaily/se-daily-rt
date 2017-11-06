@@ -3,7 +3,7 @@ defmodule SEDailyRTWeb.UserSocket do
 
   ## Channels
   channel "room:*", SEDailyRTWeb.RoomChannel
-  channel "podcast:*", SEDailyRTWeb.RoomChannel
+  channel "podcast:*", SEDailyRTWeb.PodcastChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket
