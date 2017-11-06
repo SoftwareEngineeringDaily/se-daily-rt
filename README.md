@@ -12,6 +12,6 @@ Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 ## Todo
 - [x] Create lobby channel
 - [x] Create per podcast channel
-- [ ] Make chat persistent (Sanitize user content!!!!)
+- [x] Make chat persistent (Sanitize user content!!!!)
 - [ ] Load last 20 messages when a user joins
 - [ ] Handle disconnects property
