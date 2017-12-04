@@ -10,14 +10,14 @@ defmodule SEDailyRTWeb.RoomChannel do
   def join("room:lobby", payload, socket) do
     case create_or_load_user(payload) do
       %{username: username, id: id} -> 
-        # load previous chat messages if any
         %{topic: topic} = socket
+        %{"token" => token} = payload
         messages = SEDailyRT.Chats.list_channel_messages(topic)
         resp = %{messages: Phoenix.View.render_many(messages, MessageView, "message.json")}
 
         # trigger the after_join for presense
         send(self(), :after_join)        
-        {:ok, resp, assign(socket, :user, %{username: username, id: id})}
+        {:ok, resp, assign(socket, :user, %{username: username, id: id, token: token})}
       _ -> 
         {:error, %{reason: "unauthorized"}}
     end
@@ -32,17 +32,16 @@ defmodule SEDailyRTWeb.RoomChannel do
     {:noreply, socket}
   end
 
-  def handle_in("create_chat_message", %{"text" => message}, socket) do
-    %{assigns: %{user: %{username: username}}, topic: topic} = socket
-    message = HtmlSanitizeEx.strip_tags(message)
-    # Save to database
-    user = create_or_load_user(%{"username" => username})
+  def handle_in("create_chat_message", %{"body" => body}, socket) do
+    %{assigns: %{user: %{id: id}}, topic: topic} = socket
+    body = HtmlSanitizeEx.strip_tags(body)
+    user = SEDailyRT.Accounts.get_user!(id)
 
-    case Chats.create_user_message(user, %{body: message, channel: topic}) do 
-      {:ok, msg} -> 
-        message = msg
-        |> Repo.preload(:user)
-        |> Phoenix.View.render_one(MessageView, "message.json")
+    case Chats.create_user_message(user, %{body: body, channel: topic}) do 
+      {:ok, message} -> 
+        message = message
+                  |> Repo.preload(:user)
+                  |> Phoenix.View.render_one(MessageView, "message.json")
         
         broadcast socket, "new_message", message
         {:reply, :ok, socket}
@@ -51,18 +50,17 @@ defmodule SEDailyRTWeb.RoomChannel do
     end    
   end
   
-  # Create or load the user by the username
   defp create_or_load_user(%{"token" => token}) do
-    %{"username" => username} = user = decode_token(token)
-    case Accounts.get_user_by_username(username) do
+    %{"username" => username, "email" => email, "_id" => id, "name" => name} = user = decode_token(token)
+    case Accounts.get_user_by_account_id(id) do
       nil -> 
-        {:ok, user} = Accounts.create_user(%{"username" => username})
+        {:ok, user} = Accounts.create_user(%{"username" => username, "email" => email, "auth_id" => id, "name" => name})
         user
       user -> user
     end
   end
-  
-  defp decode_token(token) do
+
+  def decode_token(token) do
     token 
     |> Joken.token
     |> Joken.peek

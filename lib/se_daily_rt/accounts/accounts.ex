@@ -50,6 +50,9 @@ defmodule SEDailyRT.Accounts do
 
   """
   def get_user_by_username(username), do: Repo.get_by(User, username: username)
+
+  
+  def get_user_by_account_id(id), do: Repo.get_by(User, auth_id: id)
   
   @doc """
   Creates a user.
