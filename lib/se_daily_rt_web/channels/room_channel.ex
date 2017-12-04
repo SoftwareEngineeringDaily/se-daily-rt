@@ -10,7 +10,7 @@ defmodule SEDailyRTWeb.RoomChannel do
   def join("room:lobby", payload, socket) do
     case create_or_load_user(payload) do
       %{username: username, id: id} -> 
-        # load previous chat messages for topic if any
+        # load previous chat messages if any
         %{topic: topic} = socket
         messages = SEDailyRT.Chats.list_channel_messages(topic)
         resp = %{messages: Phoenix.View.render_many(messages, MessageView, "message.json")}
@@ -52,12 +52,19 @@ defmodule SEDailyRTWeb.RoomChannel do
   end
   
   # Create or load the user by the username
-  defp create_or_load_user(%{"username" => username}) do
+  defp create_or_load_user(%{"token" => token}) do
+    %{"username" => username} = user = decode_token(token)
     case Accounts.get_user_by_username(username) do
       nil -> 
         {:ok, user} = Accounts.create_user(%{"username" => username})
         user
       user -> user
     end
+  end
+  
+  defp decode_token(token) do
+    token 
+    |> Joken.token
+    |> Joken.peek
   end
 end
