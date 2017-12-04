@@ -3,8 +3,9 @@ defmodule SEDailyRTWeb.UserView do
   
     def render("user.json", %{user: user}) do
         %{
-            id: user.id,
-            username: user.username
+            auth_id: user.auth_id,
+            username: user.username,
+            name: user.name
         }
     end
 end

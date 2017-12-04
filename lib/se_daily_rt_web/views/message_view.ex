@@ -5,6 +5,7 @@ defmodule SEDailyRTWeb.MessageView do
         %{
             id: msg.id,
             body: msg.body,
+            sent_at: msg.inserted_at,
             user: render_one(msg.user, SEDailyRTWeb.UserView, "user.json")
         }
     end
