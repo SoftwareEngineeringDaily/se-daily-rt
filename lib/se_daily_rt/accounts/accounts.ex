@@ -51,7 +51,18 @@ defmodule SEDailyRT.Accounts do
   """
   def get_user_by_username(username), do: Repo.get_by(User, username: username)
 
-  
+  @doc """
+  Gets a single user by the account id
+
+  ## Examples
+
+      iex> get_user_by_account_id('5a262f7232c5f6002a6d5f11')
+      %User{}
+
+      iex> get_user_by_account_id('5a262f7232c5f6002a62244554')
+      ** (Ecto.NoResultsError)
+
+  """
   def get_user_by_account_id(id), do: Repo.get_by(User, auth_id: id)
   
   @doc """
