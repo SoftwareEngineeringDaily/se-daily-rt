@@ -166,6 +166,8 @@ defmodule SEDailyRT.Chats do
 
   """
   def create_user_message(%User{} = user, attrs \\ %{}) do
+    attrs =  %{attrs | body: HtmlSanitizeEx.strip_tags(attrs.body)}
+    
     user
     |> Ecto.build_assoc(:messages)
     |> Messages.changeset(attrs)
