@@ -51,7 +51,7 @@ defmodule SEDailyRTWeb.RoomChannel do
   end
   
   defp create_or_load_user(%{"token" => token}) do
-    %{"username" => username, "email" => email, "_id" => id, "name" => name} = user = decode_token(token)
+    %{"username" => username, "email" => email, "_id" => id, "name" => name} = user = SEDailyRT.Token.decode_token(token)
     case Accounts.get_user_by_account_id(id) do
       nil -> 
         {:ok, user} = Accounts.create_user(%{"username" => username, "email" => email, "auth_id" => id, "name" => name})
@@ -60,9 +60,4 @@ defmodule SEDailyRTWeb.RoomChannel do
     end
   end
 
-  def decode_token(token) do
-    token 
-    |> Joken.token
-    |> Joken.peek
-  end
 end
