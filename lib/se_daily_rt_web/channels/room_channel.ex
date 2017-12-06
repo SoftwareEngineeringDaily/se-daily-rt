@@ -8,16 +8,15 @@ defmodule SEDailyRTWeb.RoomChannel do
   
 
   def join("room:lobby", payload, socket) do
-    case create_or_load_user(payload) do
-      %{username: username, id: id} -> 
+    case Accounts.create_or_load_user(payload) do
+      user -> 
         %{topic: topic} = socket
-        %{"token" => token} = payload
         messages = SEDailyRT.Chats.list_channel_messages(topic)
         resp = %{messages: Phoenix.View.render_many(messages, MessageView, "message.json")}
 
         # trigger the after_join for presense
         send(self(), :after_join)        
-        {:ok, resp, assign(socket, :user, %{username: username, id: id, token: token})}
+        {:ok, resp, assign(socket, :user, user)}
       _ -> 
         {:error, %{reason: "unauthorized"}}
     end
@@ -33,10 +32,8 @@ defmodule SEDailyRTWeb.RoomChannel do
   end
 
   def handle_in("create_chat_message", %{"body" => body}, socket) do
-    %{assigns: %{user: %{id: id}}, topic: topic} = socket
-    body = HtmlSanitizeEx.strip_tags(body)
-    user = SEDailyRT.Accounts.get_user!(id)
-
+    %{assigns: %{user: user}, topic: topic} = socket
+    
     case Chats.create_user_message(user, %{body: body, channel: topic}) do 
       {:ok, message} -> 
         message = message
@@ -48,16 +45,6 @@ defmodule SEDailyRTWeb.RoomChannel do
       {:error, changeset} -> 
         {:reply, changeset, socket}
     end    
-  end
-  
-  defp create_or_load_user(%{"token" => token}) do
-    %{"username" => username, "email" => email, "_id" => id, "name" => name} = user = SEDailyRT.Token.decode_token(token)
-    case Accounts.get_user_by_account_id(id) do
-      nil -> 
-        {:ok, user} = Accounts.create_user(%{"username" => username, "email" => email, "auth_id" => id, "name" => name})
-        user
-      user -> user
-    end
   end
 
 end
