@@ -5,7 +5,4 @@ defmodule SEDailyRTWeb.PodcastChannel do
     {:ok, assign(socket, :podcast_id, podcast_id)}
   end
 
-  
-
- 
 end
