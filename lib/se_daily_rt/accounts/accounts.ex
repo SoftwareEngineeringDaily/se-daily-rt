@@ -129,4 +129,15 @@ defmodule SEDailyRT.Accounts do
   def change_user(%User{} = user) do
     User.changeset(user, %{})
   end
+
+
+  def create_or_load_user(%{"token" => token}) do
+    %{"username" => username, "email" => email, "_id" => id, "name" => name} = user = SEDailyRT.Token.decode_token(token)
+    case get_user_by_account_id(id) do
+      nil -> 
+        {:ok, user} = create_user(%{"username" => username, "email" => email, "auth_id" => id, "name" => name})
+        user
+      user -> user
+    end
+  end
 end
