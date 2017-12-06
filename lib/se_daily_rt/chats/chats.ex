@@ -130,7 +130,7 @@ defmodule SEDailyRT.Chats do
   def list_channel_messages(channel) do 
     Repo.all(
         from m in Messages,
-        limit: 100, 
+        limit: 20, 
         order_by: [asc: m.id],
         where: m.channel == ^channel,
         preload: [:user]
