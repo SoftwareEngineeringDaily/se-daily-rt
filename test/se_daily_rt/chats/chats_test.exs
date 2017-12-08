@@ -69,7 +69,7 @@ defmodule SEDailyRT.ChatsTest do
     
 
     @valid_attrs %{body: "some body", channel: "cool_channel"}
-    @user_valid_attrs %{username: "johny_ive"}
+    @user_valid_attrs %{username: "johny_ive", email: "j@me.com", auth_id: "12355"}
     @update_attrs %{body: "some updated body"}
     @invalid_attrs %{body: nil}
 

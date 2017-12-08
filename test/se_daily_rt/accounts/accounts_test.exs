@@ -6,7 +6,7 @@ defmodule SEDailyRT.AccountsTest do
   describe "users" do
     alias SEDailyRT.Accounts.User
 
-    @valid_attrs %{username: "some name"}
+    @valid_attrs %{username: "some name", email: "testing@me.com", auth_id: "12355"}
     @update_attrs %{username: "some updated name"}
     @invalid_attrs %{username: nil}
 
