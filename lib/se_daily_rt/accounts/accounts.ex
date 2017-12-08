@@ -130,9 +130,16 @@ defmodule SEDailyRT.Accounts do
     User.changeset(user, %{})
   end
 
+  @doc """
+  Loads or creates a user with a given JWT
 
+  ## Examples
+
+      iex> create_or_load_user(%{"token" => "dfdfdfdfd"})
+      %User{}
+  """
   def create_or_load_user(%{"token" => token}) do
-    %{"username" => username, "email" => email, "_id" => id, "name" => name} = user = SEDailyRT.Token.decode_token(token)
+    %{"username" => username, "email" => email, "_id" => id, "name" => name} = user = SEDailyRT.JWT.decode(token)
     case get_user_by_account_id(id) do
       nil -> 
         {:ok, user} = create_user(%{"username" => username, "email" => email, "auth_id" => id, "name" => name})
