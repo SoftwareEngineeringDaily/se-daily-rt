@@ -10,7 +10,10 @@ defmodule SEDailyRT.Mixfile do
       compilers: [:phoenix, :gettext] ++ Mix.compilers,
       start_permanent: Mix.env == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      name: "SEDailyRT Chat",
+      source_url: "https://github.com/SoftwareEngineeringDaily/se-daily-rt",
+      homepage_url: "https://softwareengineeringdaily.com/",
     ]
   end
 
@@ -40,7 +43,8 @@ defmodule SEDailyRT.Mixfile do
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
       {:html_sanitize_ex, "~> 1.3"},
-      {:joken, "~> 1.5"}
+      {:joken, "~> 1.5"},
+      {:ex_doc, "~> 0.16", only: :dev, runtime: false}
     ]
   end
 
