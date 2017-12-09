@@ -1,9 +1,7 @@
 defmodule SEDailyRT do
   @moduledoc """
-  SEDailyRT keeps the contexts that define your domain
-  and business logic.
-
-  Contexts are also responsible for managing your data, regardless
-  if it comes from the database, an external API or others.
+  SEDailyRT is the data context used by the real-time chat backend for Software Engineering Daily. 
+  In this context you can find data repos for chat messages and user accounts. 
+  
   """
 end

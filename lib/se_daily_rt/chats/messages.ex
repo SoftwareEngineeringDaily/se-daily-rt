@@ -1,4 +1,6 @@
 defmodule SEDailyRT.Chats.Messages do
+  @moduledoc false
+  
   use Ecto.Schema
   import Ecto.Changeset
   alias SEDailyRT.Chats.Messages

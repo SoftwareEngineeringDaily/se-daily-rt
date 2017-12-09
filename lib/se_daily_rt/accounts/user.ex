@@ -1,4 +1,6 @@
 defmodule SEDailyRT.Accounts.User do
+  @moduledoc false
+
   use Ecto.Schema
   import Ecto.Changeset
   alias SEDailyRT.Accounts.User

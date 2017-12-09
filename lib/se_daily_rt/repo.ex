@@ -1,4 +1,6 @@
 defmodule SEDailyRT.Repo do
+  @moduledoc false
+
   use Ecto.Repo, otp_app: :se_daily_rt
 
   @doc """

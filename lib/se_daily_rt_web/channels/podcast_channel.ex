@@ -1,4 +1,9 @@
 defmodule SEDailyRTWeb.PodcastChannel do
+  @moduledoc """
+  Channel for individual podcasts
+  
+  ## Usage
+  """
   use SEDailyRTWeb, :channel
 
   def join("podcast:" <> podcast_id , _payload, socket) do

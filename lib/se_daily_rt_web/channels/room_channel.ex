@@ -1,4 +1,10 @@
 defmodule SEDailyRTWeb.RoomChannel do
+  @moduledoc """
+  Channel for the lobby chat
+  
+  ## Usage
+  
+  """
   use SEDailyRTWeb, :channel
   alias SEDailyRTWeb.Presence
   alias SEDailyRTWeb.MessageView

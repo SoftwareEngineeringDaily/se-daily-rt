@@ -1,4 +1,6 @@
 defmodule SEDailyRTWeb.Router do
+  @moduledoc false
+
   use SEDailyRTWeb, :router
 
   pipeline :api do
