@@ -9,7 +9,7 @@ defmodule SEDailyRTWeb.RoomChannel do
 
   def join("room:lobby", payload, socket) do
     case Accounts.create_or_load_user(payload) do
-      user -> 
+      %SEDailyRT.Accounts.User{} = user -> 
         %{topic: topic} = socket
         messages = SEDailyRT.Chats.list_channel_messages(topic)
         resp = %{messages: Phoenix.View.render_many(messages, MessageView, "message.json")}
@@ -43,7 +43,7 @@ defmodule SEDailyRTWeb.RoomChannel do
         broadcast socket, "new_message", message
         {:reply, :ok, socket}
       {:error, changeset} -> 
-        {:reply, changeset, socket}
+        {:reply, {:error, changeset}, socket}
     end    
   end
 
