@@ -15,7 +15,7 @@ use Mix.Config
 # which you typically run after static files are built.
 config :se_daily_rt, SEDailyRTWeb.Endpoint,
   load_from_system_env: true,
-  url: [scheme: "https", host: "blooming-woodland-42824.herokuapp.com", port: 443],
+  url: [scheme: "https", host: Map.fetch!(System.get_env(), "APP_HOST"), port: 443],
   force_ssl: [rewrite_on: [:x_forwarded_proto]],
   secret_key_base: Map.fetch!(System.get_env(), "SECRET_KEY_BASE")
 
