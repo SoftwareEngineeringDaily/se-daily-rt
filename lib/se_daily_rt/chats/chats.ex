@@ -6,7 +6,6 @@ defmodule SEDailyRT.Chats do
   import Ecto.Query, warn: false
   alias SEDailyRT.Repo
   alias SEDailyRT.Accounts.User  
-
   alias SEDailyRT.Chats.Channels
 
   @doc """
@@ -131,7 +130,7 @@ defmodule SEDailyRT.Chats do
     Repo.all(
         from m in Messages,
         limit: 20, 
-        order_by: [asc: m.id],
+        order_by: [desc: m.id],
         where: m.channel == ^channel,
         preload: [:user]
     )
