@@ -15,6 +15,7 @@ use Mix.Config
 # which you typically run after static files are built.
 config :se_daily_rt, SEDailyRTWeb.Endpoint,
   load_from_system_env: true,
+  debug_errors: true,
   url: [scheme: "https", host: Map.fetch!(System.get_env(), "APP_HOST"), port: 443],
   force_ssl: [rewrite_on: [:x_forwarded_proto]],
   secret_key_base: Map.fetch!(System.get_env(), "SECRET_KEY_BASE")
@@ -25,8 +26,8 @@ config :se_daily_rt, SEDailyRT.Repo,
   pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
   ssl: true
 
-  # Do not print debug messages in production
-config :logger, level: :info
+# Do not print debug messages in production
+config :logger, :console, format: "[$level] $message\n"
 
 # ## SSL Support
 #
