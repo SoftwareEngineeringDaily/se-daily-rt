@@ -16,7 +16,7 @@ use Mix.Config
 config :se_daily_rt, SEDailyRTWeb.Endpoint,
   load_from_system_env: true,
   debug_errors: true,
-  url: [scheme: "https", host: "infinite-mesa-69601.herokuapp.com", port: 443],
+  url: [scheme: "https", host: "ancient-bastion-47373.herokuapp.com", port: 443],
   force_ssl: [rewrite_on: [:x_forwarded_proto]],
   secret_key_base: Map.fetch!(System.get_env(), "SECRET_KEY_BASE")
 
