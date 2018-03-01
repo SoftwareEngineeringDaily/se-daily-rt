@@ -5,7 +5,14 @@ defmodule SEDailyRTWeb.UserViewTest do
   import Phoenix.View
 
   test "render user.json" do
-    assert render(SEDailyRTWeb.UserView, "user.json", []) ==
-           %{errors: %{detail: "Internal server error"}}
+    data = %{user: 
+      %{
+        auth_id: 123,
+        username: "edgar123",
+        name: "Edgar PIno"
+      }  
+    }
+    assert render(SEDailyRTWeb.UserView, "user.json", data) ==
+      %{auth_id: 123, name: "Edgar PIno", username: "edgar123"}
   end
 end

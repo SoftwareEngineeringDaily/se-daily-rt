@@ -43,7 +43,8 @@ defmodule SEDailyRT.Mixfile do
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
       {:html_sanitize_ex, "~> 1.3"},
-      {:joken, "~> 1.5"}
+      {:joken, "~> 1.5"},
+      {:mix_test_watch, "~> 0.5", only: :dev, runtime: false}
     ]
   end
 
