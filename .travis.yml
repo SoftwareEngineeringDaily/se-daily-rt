@@ -1,19 +1,22 @@
 language: elixir
 elixir:
-  - 1.4
+- 1.4
 env:
-  - MIX_ENV=test
-
+- MIX_ENV=test
 addons:
   postgresql: '9.4'
-
 services:
-  - postgresql
-
+- postgresql
 before_script:
-  - cp config/travis.exs config/test.exs
-  - mix ecto.create
-  - mix ecto.migrate
-
+- cp config/travis.exs config/test.exs
+- mix ecto.create
+- mix ecto.migrate
 script:
-  - mix test
+- mix test
+deploy:
+  provider: heroku
+  api_key:
+    secure: LeHl3LMv5/VJu8RqjGVuyWy2Fe3DlTbnab25XPCvXLJ/7rHzatKCYzMIUQC5NrByAD5yZ/mQgCqIEmyWbIOdYZ+XBEbJ4a/CygU/5X+913lDWmuUc98mRx/IL+cz7GOQmzHcQ52+CcrWVIfpkM0dmd0VBCnwLvcddqSnANdTiIswuZgtqjrK0ceHvym0qR0o6hrwjgMMcBLSoGlHqDwZAPGWgk39ngjnueeyWBtkes3srn0Gp6gUscE5dGNtjzVkEfa8jAMeaiYtO8KCn1l9s6IwhqwZt4QVwOC8Bktq14lFJBJDMZzb3GeCiU8P9awqGNRWXxNOfuMbYTO3QSSrt+R4JBQ0u9KdLwATuR3ZwQXHNluUBE2JoyAMGw0q/SzznCMBqJgTYcwkEiqjQ/4UZBWAb33dtNyIWhMuTy2O/okZwCCalntUtK5aqIWPhJxZEn7YhkeEcYDUmPsMEipT1/KLH62oMLZ7rVLsok0JFPxqYHZgGAA9F64YG+w1Uzk/OMX/Umz/1KpS2qinf1coYrOmCjZAAc+F1RnZP3r0W6MzgCnGHbXP8HtjJoZih5/ObyKK2panfuD1/BycDVuhZdxm//Pptq/BWaPxSbTs8q4dnpcLH2WGbWwhol2/k2kYSyOeX6CCNSg1zIi2jd2GmJ1F6XZKfRRY3MqgB0OEhSM=
+  app: ancient-bastion-47373
+  on:
+    repo: SoftwareEngineeringDaily/se-daily-rt
