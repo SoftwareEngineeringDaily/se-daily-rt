@@ -3,7 +3,7 @@ defmodule SEDailyRTWeb.RoomChannelTest do
 
   alias SEDailyRTWeb.RoomChannel
   alias SEDailyRT.Chats
-
+  
   setup do
     user = %{"username" => "tester", "email" => "test@me.com", "_id" => "12323232323", "name" => "The Tester"}
     jwt = user 
@@ -28,4 +28,11 @@ defmodule SEDailyRTWeb.RoomChannelTest do
     assert_reply ref, :ok
   end
 
+  test "create_chat_message with long message body replies with status ok", %{socket: socket} do
+    ref = push socket, "create_chat_message", %{"body" => "this is a test message this is a test message this is a test message this is a test message this is a test message this is a test message this is a test message this is a test message this is a test message this is a test message this is a test message this is a test message this is a test message this is a test message this is a test message this is a test message this is a test message this is a test message"}
+
+    assert_push "new_message", %{body: _body, id: id}
+    assert Chats.get_messages!(id)
+    assert_reply ref, :ok
+  end
 end
