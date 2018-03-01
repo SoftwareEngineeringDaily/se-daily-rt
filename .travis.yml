@@ -1,9 +1,17 @@
-language: elixir
+anguage: elixir
+
 elixir:
-  - 1.4
-env:
-  - MIX_ENV=test
+  - 1.4.1
+
+addons:
+  postgresql: '9.4'
+
+services:
+  - postgresql
+
+before_script:
+  - cp config/travis.exs config/test.exs
+  - mix do ecto.create, ecto.migrate
+
 script:
-  - mix deps.get
   - mix test
-after_success:
